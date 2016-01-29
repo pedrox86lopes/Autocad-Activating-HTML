@@ -1,0 +1,629 @@
+@import url(common.css);
+@import url(style.css);
+
+/*****************************************
+ * Global settings
+ ****************************************/
+body {
+	background-color: #f2f2f2;
+	background-image: url(main_bg.gif);
+	background-repeat: no-repeat;
+	border: none;
+}
+
+h1 {
+    color: #000000;
+    font-size: 14px;
+	font-weight: bold;
+    line-height: 17px;
+    margin-top: 0px;
+    margin-bottom: 14px;
+    margin-left: -1px;
+}
+
+#logo-bar 
+{
+	top: 0;
+	left: 0;
+	width: 760px;
+	height: 90px;
+	position: fixed;
+	background-repeat: no-repeat;
+	border: none;
+}
+
+#licensing-logo-bar 
+{
+	top: 0;
+	left: 0;
+	width: 760px;
+	height: 330px;
+	position:fixed;
+	background-repeat: no-repeat;
+	border: none;
+	z-index:-1;
+}
+
+#licensing-logo-header
+{
+	top: 280;
+	left: 0;
+	width: 760px;
+	height: 52px;
+	position:absolute;
+	border: none;
+	z-index:0;
+}
+
+#licensing-logo-header h2
+{
+	margin: 12px auto auto 72px;
+	position: fixed;
+	font-size: 22px;
+	font-style: normal;
+	/*font-weight: bold;*/
+	border: none;
+	color: #333333;
+}
+
+#action-section
+{
+	margin: none;
+	top: auto;
+	bottom: 26px;
+	left: 140px;
+	right: 90px;
+	position:fixed;
+	width: 530px;
+	height: 110px;
+	border: none;
+}
+
+#footer 
+{
+	top: auto;
+	bottom: 0;
+	width: 760px;
+	height: 26px;
+	position: absolute;
+	background-repeat: no-repeat;
+	border: none;
+	background-color: rgb(244,245,239);
+	color: #666666;
+	font-size: 10px;
+	text-align:center;
+	vertical-align:middle;
+	padding: 6 0 0 0;
+    border-top: 1px solid rgb(221, 221, 221);
+}
+
+#page-header
+{
+	top:auto;
+	bottom: auto;
+	width: 760;
+	height: 76;
+	background-repeat: no-repeat;
+	border: none;
+}
+
+#page-header h2
+{
+	margin: 38px auto auto 92px;
+	position: fixed;
+	font-size: 16px;
+	font-style: normal;
+	/*font-weight: bold;*/
+	border: none;
+    color: #333333;
+}
+
+#page-header grayline
+{
+	top: auto;
+	bottom:0;
+	width: 760x;
+	height: 1px;
+	border: none;
+	background-repeat: no-repeat;
+	background-color: #cccccc;
+}
+
+#activation-box {
+	border: 			none;
+	margin:				0px 70px 0px 70px;
+	padding: 			none;
+	width:				615px;
+}
+
+div.background
+{
+	top: 330;
+	left:0;
+	position:absolute;
+	width: 760px;
+	height: 335px;
+	background-color: White;
+	border: none;
+}
+
+div.full_background
+{
+	top: 0;
+	left:0;
+	position:absolute;
+	width: 760px;
+	height: 670px;
+	background-color: White;
+	border: none;
+	filter:alpha(opacity=60);
+	opacity:0.6;
+	visibility:hidden;
+}
+
+div.transbox_parent
+{
+	width: 420px;
+	height: 130px;
+	margin: 0 0 0 0;
+	top: 422px;
+	position:absolute;
+	background-color: rgb(231,232,217);
+}
+
+div.transbox
+{
+	width: 420px;
+	height: 130px;
+	margin: 0 0 0 0;
+	position:absolute;
+	background-color: #ffffff;
+	filter:alpha(opacity=60);
+	opacity:0.6;
+}
+
+div.transbox p
+{
+	vertical-align:middle;
+	font-weight: bold;
+	color: #000000;
+}
+
+div.transbox_for_fullscreen_parent
+{
+	width: 420px;
+	height: 130px;
+	margin: 0 0 0 0;
+	top: 260px;
+	left:160px;
+	position:absolute;
+    background-color: Black;
+	border: none;
+    visibility:hidden;
+}
+
+div.transbox_for_fullscreen
+{
+	width: 420px;
+	height: 130px;
+	margin: 0 0 0 0;
+	background-color: #ffffff;
+	border: 1px solid black;
+	visibility:hidden;
+}
+
+div.hoverarea
+{
+	background-color:#cccccc;
+	position:absolute;
+	padding: 2px 0 2px 5px;
+	z-index:2;
+}
+
+/* Hover with opacity
+div.hoverarea
+{
+	background-color:#cccccc;
+	position:absolute;
+	padding: 2px 0 2px 5px;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
+	filter: alpha(opacity=60);
+	-moz-opacity: 0.60;
+	opacity: 0.6;
+	z-index:2;
+}
+*/
+
+/*****************************************
+ * Container settings
+ ****************************************/
+#adsk81-container {
+	background-color: #ffffff;
+	background-image: url(leftsash.gif);
+	background-repeat: repeat-y;
+    height: 100%;
+	min-height: 100%;
+	position: relative;
+	width: 760px;
+}
+
+/*****************************************
+ * Header settings
+ ****************************************/
+#adsk81-header {
+	position: relative;
+	height: 80px;
+	background-color: #ffffff;
+}
+#adsk81-header a.adsklogo {
+	position: absolute;
+	top: 12px;
+	left: 13px;
+}
+#adsk81-header div.country {
+	position: absolute;
+	color: #666666;
+	font-size: 10px;
+	top: 50px;
+	left: 13px;
+}
+#adsk81-header ul.nav {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+	right: 10px;
+	text-align: right;
+    top: 12px;
+    width: 525px;
+}
+#adsk81-header ul.nav li {
+	display: inline;
+	margin-left: -2px;
+}
+#adsk81-header ul.nav li li {
+	background: url(dash.gif) no-repeat 0px 7px;
+	margin-left: 0px;
+	padding-left: 7px;
+}
+#adsk81-header ul.nav li li.first {
+	background: url(bar.gif) no-repeat 2px 2px;
+}
+#adsk81-header ul.nav li.first li.first {
+	background-image: none;
+}
+#adsk81-header ul.nav li ul {
+	display: inline;
+	margin: 0px;
+	padding: 0px;
+}
+#adsk81-header ul.nav li a.on {
+    color: #666666;
+}
+
+#adsk81-content {
+    border-collapse: collapse;
+    margin-bottom: 100px;
+    table-layout: fixed;
+    width: 760px;
+}
+
+/*****************************************
+ * Page Banner image settings
+ ****************************************/
+#adsk81-page-banner {
+    /* 2006-03-01 (JK): Removed background-color: #ffffff; not sure why it was here, but it caused page banner
+        to be too wide in Opera 8.51 */
+    margin-top: 0;
+    padding: 0;
+    width: 760px;
+}
+#adsk81-no-page-banner {
+    background-image: url(contentbgline.gif);
+    background-repeat: no-repeat;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+}
+
+#adsk81-leftsash,
+#adsk81-maincontent,
+#adsk81-rightsash,
+#adsk81-sigimage {
+    margin-top: 0;
+    padding-top: 0;
+    vertical-align: top;
+}
+#adsk81-maincontent {
+    /* 2px needed to match 7.3.3 in about us prototype page */
+    padding-left: 2px;
+}
+#adsk81-sigimage img {
+    /* 2px needed to match 7.3.3 in about us prototype page */
+    padding-left: 2px;
+}
+
+/*****************************************
+ * Left sash settings
+ ****************************************/
+#adsk81-leftsash {
+	width: 184px;
+	padding: 0 0 0 0;
+	color: #666666;
+}
+
+/* First Level */
+#adsk81-leftsash ul {
+	margin: 0 0 0 0;
+	padding-bottom: 1em;
+    padding-left: 11px;
+	padding-right: 13px;
+    padding-top: 12px;
+    line-height: 14px;
+    list-style-type: none;
+	font-weight: bold;
+}
+#adsk81-leftsash ul li {
+	color: #666666;
+    line-height: 16px;
+    padding-left: 2px; /* For broken W */
+}
+
+/* Second Level */
+#adsk81-leftsash ul ul {
+	font-weight: normal;
+	list-style-type: none;
+	padding: 0;
+	margin: 0px 0 1em 0;
+}
+#adsk81-leftsash ul li li {
+    padding-left: 1px; /* For broken W */
+    line-height: 14px;
+}
+
+/* Third Level */
+#adsk81-leftsash ul ul ul {
+	margin: 0;
+}
+#adsk81-leftsash ul li li li {
+	padding: 0 0 0 1em;
+	background: url(dash.gif) no-repeat 1px 8px;
+}
+
+#adsk81-leftsash ul li.on a,
+#adsk81-leftsash ul li.on a:visited,
+#adsk81-leftsash ul li li.on a,
+#adsk81-leftsash ul li li.on a:visited,
+#adsk81-leftsash ul li li li.on a,
+#adsk81-leftsash ul li li li.on a:visited,
+#adsk81-leftsash ul li li li li.on a,
+#adsk81-leftsash ul li li li li.on a:visited,
+#adsk81-leftsash ul li.in.leaf a,
+#adsk81-leftsash ul li.in.leaf a:visited
+{
+	color: #000000;
+}
+#adsk81-leftsash ul li.on li a,
+#adsk81-leftsash ul li.on li a:visited,
+#adsk81-leftsash ul li li.on li a,
+#adsk81-leftsash ul li li.on li a:visited,
+#adsk81-leftsash ul li.in.leaf li a,
+#adsk81-leftsash ul li.in.leaf li a:visited
+{
+	color: #0082b4;
+}
+#adsk81-leftsash ul li a:visited {
+	color: #0082b4;
+}
+
+/*****************************************
+ * Sash Links
+ ****************************************/
+#adsk81-leftsash div.sashlinks {
+    margin-bottom: 1em;
+    margin-left: 11px;
+    margin-right: 13px;
+    margin-top: 13px;
+}
+#adsk81-leftsash div.sashlinks div {
+    /* for index summary */
+    padding-left: 2px;
+}
+#adsk81-leftsash div.sashlinks ul {
+    font-weight: normal;
+    padding-left: 0;
+    padding-top: 0;
+}
+
+/*****************************************
+ * Right panel (containing signature image, content body, and right sash)
+ ****************************************/
+#adsk81-rightpanel {
+    padding: 0; /* Without padding: 0 IE6 increases width by 2px when there is no page-banner */
+    vertical-align: top;
+}
+#adsk81-rightpanel-sub {
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    table-layout: fixed;
+}
+
+/*****************************************
+ * Signature image settings
+ ****************************************/
+#adsk81-sigimage {
+    padding-left: 0; /* Left padding needs to be 0 in IE7 */
+    padding-bottom: 13px; /* 13px works for a normal page with a title. Note that it's critical that there be
+                            no whitespace around the <img> */
+    padding-top: 12px; /* 12 px matches about us in prototype */
+}
+
+/*****************************************
+ * Content record navigation settings
+ ****************************************/
+#adsk81-content-record-nav {
+    margin: 0;
+    padding: 0 0 13px 0;
+}
+#adsk81-content-record-nav ul {
+    margin: 0;
+    padding: 0;
+}
+#adsk81-content-record-nav ul li {
+    background: url(bar.gif) no-repeat 4px 2px;
+    display: inline;
+    margin: 0;
+    padding: 0 0 0 13px;
+}
+#adsk81-content-record-nav ul li.first {
+    background: none;
+    padding-left: 0;
+}
+#adsk81-content-record-nav a.on {
+    color: #666666;
+}
+
+/*****************************************
+ * Main content area settings
+ ****************************************/
+#adsk81-maincontent {
+    line-height: 15px;
+    padding-top: 11px;
+    margin: 0;
+}
+#adsk81-maincontent ul.index.bulleted li a,
+#adsk81-maincontent ul.index.nolinebreak li a,
+#adsk81-maincontent ol.index.numbered li a {
+    /* Override the standard bold links */
+    font-weight: normal;
+}
+#adsk81-maincontent-footer #adsk81-related-links ul.support li {
+    font-weight: bold;
+    list-style-image: none;
+    list-style-type: none;
+    margin-bottom: 11px;
+}
+
+/*****************************************
+ * Right Sash settings
+ ****************************************/
+#adsk81-rightsash {
+    padding: 11px 0 0 0;
+    width: 186px;
+}
+#adsk81-rightsash div,
+#adsk81-rightsash img
+{
+    margin-bottom: 5px;
+    margin-left: 7px; /* 7px works for Flash */
+}
+
+/*****************************************
+ * Footer settings
+ ****************************************/
+#adsk81-footer {
+    border-top: 1px solid #cccccc;
+    color: #666666;
+    margin-left: 192px;
+    margin-right: 13px;
+}
+#adsk81-footer a,
+#adsk81-footer a:visited {
+	color: #0094C1;
+}
+#adsk81-footer a.on {
+	color: #666666;
+}
+#adsk81-footer ul {
+    margin: 0 0 0 1px;
+    padding: 10px 0 0 0;
+}
+#adsk81-footer ul ul {
+    border: none;
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+#adsk81-footer ul li {
+	list-style-type: none;
+	padding-bottom: 5px;
+}
+#adsk81-footer ul li li {
+	background: url(dash.gif) no-repeat 0px 7px;
+	display: inline;
+	padding-left: 7px;
+}
+#adsk81-footer ul li li.first {
+	background: url(bar.gif) no-repeat 2px 2px;
+}
+#adsk81-footer ul ul.first li.first {
+	background-image: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+#text_field {
+	width:  275px;
+}
+.block {
+	DISPLAY: block
+    font-family: arial,verdana,helvetica,sans-serif;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+}
+P.block {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 11px; PADDING-TOP: 0px
+    font-family: arial,verdana,helvetica,sans-serif;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+}
+.error {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 11px; PADDING-TOP: 0px
+	FONT-SIZE: 11px; 
+	COLOR: #ff0000; 
+	FONT-FAMILY: arial,verdana,helvetica,sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.messages {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 11px; PADDING-TOP: 0px
+	FONT-SIZE: 11px; 
+	COLOR: #ff0000; 
+	FONT-FAMILY: arial,verdana,helvetica,sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.ad_font {
+    font-family: arial,verdana,helvetica,sans-serif;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+}
+.errorMessage{
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 11px; PADDING-TOP: 0px
+	FONT-SIZE: 11px; 
+	COLOR: #ff0000; 
+	FONT-FAMILY: arial,verdana,helvetica,sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.regtodayMessages{
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 11px; PADDING-TOP: 0px
+	FONT-SIZE: 11px; 
+	FONT-FAMILY: arial,verdana,helvetica,sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.pageLabel{
+	FONT-SIZE: 15px; 
+	FONT-FAMILY: arial,verdana,helvetica,sans-serif;
+	font-weight: bold;
+}
+.groupLabel{
+	FONT-SIZE: 12px; 
+	FONT-FAMILY: arial,verdana,helvetica,sans-serif;
+	font-weight: bold;
+}
+
