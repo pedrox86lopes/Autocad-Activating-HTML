@@ -1,0 +1,1108 @@
+<html>
+	<head>
+		<script src="RTTempPath.js"></script>
+		<script><!--
+            var key = 'RTBeginReg' + Math.floor(Math.random()*100);
+            document.writeln('<script src=\"'+userTempPath+'rteregconfdata.js?FromID='+key+'\"></script>');
+		// -->
+		</script>
+		<script src="RTResource.js"></script>
+		<script src="RTResStrings.js"></script>
+		<script src="RTCountry.js"></script>
+		<script src="RTVersion.js"></script>
+		<script><!--
+            document.writeln('<title>'+xmsgRTBeginReg+'</title>');// -->
+		// -->
+		</script>
+		<link rel="stylesheet" href="main.css" type="text/css">
+		<link rel="stylesheet" href="regOnce.css" type="text/css">
+		<STYLE TYPE="text/css" MEDIA="screen">
+			A {cursor:hand;}
+		</STYLE>
+
+		<script><!--
+
+		softwareHeaderStyle = 1;
+
+		var filler = 50;
+		
+		var maxTextFields = 16;
+		var maxBufferFields = 38;
+		var digitPerField = 4;
+		var fieldsPerRow = 4;
+		var totalTextFields = 16;
+		var fieldValues = new Array (maxBufferFields);
+		
+		var sNewString=""; //  for paste only
+		
+		var focusFlag = false;
+		var removeFlag = false;
+		var timer = 0;
+		var curSelRadio = 0;
+		if (reqtype == "1" || reqtype == "4") {
+		    curSelRadio = 1;
+		}
+		var curSelAuthRadio = 0;
+		
+	    function setfocus()	{
+	    
+		    formObj = document.RTForm;
+		    
+			if (rtbuymode == "n" && sernum == "000-00000000") {
+				formObj.nsernum.focus();
+			}
+		    
+		    //  Initialization
+		   if (reqtype ==1|| reqtype == 4) {
+		        initialTextBuffer();
+		        if (auth != "") {
+		            sNewString = auth;
+		            fillInitTextBuffer();
+		        }
+		        if (document.RTForm.selradio[0].checked) {
+		            curSelRadio = 0;
+		            sNewString = getFormattedAuthCodeFromInitBuffers();
+    				createAuthCodeArea();
+		        } else {
+ 		            curSelRadio = 1;
+       		        createAuthCodeFields();
+		        }
+		    }
+		    
+		    //  alpha support - disable "Get an activation code"
+		    //document.RTForm.selAuthRadio[0].checked = false;
+		    //document.RTForm.selAuthRadio[1].checked = true;
+		    //document.RTForm.selAuthRadio[0].disabled = true;
+		    //disableGetAuthCodeText();
+		    
+		    if (document.RTForm.selAuthRadio[0].checked) {
+		        curSelAuthRadio = 0;
+		        document.getElementById("divContainerActiveCode").style.display="none";
+				document.getElementById("divContainerActiveCode").style.visibility="hidden";
+		        document.getElementById("dynamicDisplay").style.visibility="hidden"; 
+                document.getElementById("ereglayer").style.display = "";
+				document.getElementById("ereglayer").style.visibility="";						
+			    changeSelRadioStatus(0);
+			} else {
+		        curSelAuthRadio = 1;
+		        document.getElementById("divContainerActiveCode").style.display="";
+				document.getElementById("divContainerActiveCode").style.visibility="";
+		        document.getElementById("dynamicDisplay").style.display="none";
+                document.getElementById("ereglayer").style.display = "none";
+				document.getElementById("ereglayer").style.visibility="hidden";						
+			    changeSelRadioStatus(1);
+		    }
+	        if (validationstatus == "1") {
+	            doSubmission();
+	            return;
+	        }
+	        
+			var selAuthTextControl;
+	        if (document.getElementsByName)
+		        selAuthTextControl = document.getElementsByName('selAuthText');
+	        else if (document.all)
+		        selAuthTextControl = document.all.tags('selAuthText');
+
+			var selHover = document.getElementById("connectHover");
+			reAdjustHoverArea(selAuthTextControl[0], selHover);
+			
+			selHover = document.getElementById("manualHover");
+			reAdjustHoverArea(selAuthTextControl[1], selHover);
+			
+			formObj.submitbutn.focus();
+			if (navigator.appName != "Microsoft Internet Explorer")
+			{
+			    if (reqtype ==1|| reqtype == 4) {
+				    restoreAuthCodeWhenBack();
+				}
+			}
+			
+			if (typeof(manualactivation) != "undefined" && manualactivation == "1") {
+			    doManualSubmission();
+			    return;
+			}
+	    }
+
+		function restoreAuthCodeWhenBack()
+		{
+			sNewString = auth;
+		    backupAuthcodeFields();
+		    var focusIndex = fillTextBuffer(0);
+
+		    for (i = totalTextFields; i < maxBufferFields; i++) {
+		        if (fieldValues[i] != "") {
+		            totalTextFields = i+1;
+		        }
+		    }
+		    createAuthCodeFields();		
+		    if (totalTextFields == 1) {
+		        document.RTForm.test.focus();
+		    } else {
+		        document.RTForm.test[(focusIndex-1)].focus();
+		    }
+			for (i = 0; i < totalTextFields; i++) 
+			{
+				document.RTForm.test[i].value=fieldValues[i];
+			}
+		}
+		
+		function resetContactInfo() {
+		    //  construct "auth" field
+		    if (reqtype ==1|| reqtype == 4) {
+				if (document.RTForm.selradio[0].checked) {
+					document.RTForm.auth.value = reformatAuthCodeFromPasteBox(document.RTForm.testarea.value);
+				} else {
+					document.RTForm.auth.value = getFullAuthCode();
+		        }
+		    }
+			location.href="RTAuthConfirmed.html" + "?p=" + escape(userTempPath);
+		}
+		
+		function getFullAuthCode() {
+		    var sAuthCode = "";
+		    var lastFieldWithContent = 0;
+		    
+		    if (totalTextFields == 1) {
+		        sAuthCode += document.RTForm.test.value;
+		    } else {
+		        for (i = totalTextFields-1; i >= 0; i--) {
+		            if (document.RTForm.test[i].value != "") {
+		                break;
+		            }
+		        }
+		        lastFieldWithContent = i+1;
+		        
+		        for (i = 0; i < lastFieldWithContent; i++) {
+		            sAuthCode += document.RTForm.test[i].value;
+		            if (document.RTForm.test[i].value.length < digitPerField) {
+		                j = digitPerField - document.RTForm.test[i].value.length;
+		                for (; j > 0; j--) {
+		                    sAuthCode += ' ';
+		                }
+		            }
+		        }
+		    }
+		    return sAuthCode;
+		}
+
+		function getFormattedAuthCodeFromInitBuffers() {
+		    var sAuthCode = "";
+		    var count = 0;
+		    var lastFieldWithContent = 0;
+		    
+		    if (totalTextFields == 1) {
+		        sAuthCode += fieldValues[0];
+		    } else {
+		        for (i = totalTextFields-1; i >= 0; i--) {
+		            if (fieldValues[i] != "") {
+		                break;
+		            }
+		        }
+		        lastFieldWithContent = i+1;
+
+		        for (i = 0; i < lastFieldWithContent; i++) {
+					count++;
+					if (count > 1) {
+						if (count > 4) {
+							count = 1;
+							sAuthCode += '\n';
+						} else {
+							sAuthCode += ' ';
+						}
+					}
+		            if (fieldValues[i] == "") {
+		                sAuthCode += "    ";
+		            } else {
+		                sAuthCode += fieldValues[i];
+		            }
+		        }
+		    }
+		    return sAuthCode;
+		}
+		
+		function getFormattedAuthCode() {
+		    var sAuthCode = "";
+		    var count = 0;
+		    var lastFieldWithContent = 0;
+		    
+		    if (totalTextFields == 1) {
+		        sAuthCode += document.RTForm.test.value;
+		    } else {
+		        for (i = totalTextFields-1; i >= 0; i--) {
+		            if (document.RTForm.test[i].value != "") {
+		                break;
+		            }
+		        }
+		        lastFieldWithContent = i+1;
+
+		        for (i = 0; i < lastFieldWithContent; i++) {
+					count++;
+					if (count > 1) {
+						if (count > 4) {
+							count = 1;
+							sAuthCode += '\n';
+						} else {
+							sAuthCode += ' ';
+						}
+					}
+					if (document.RTForm.test[i].value == "") {
+		                sAuthCode += "    ";
+					} else {
+		                sAuthCode += document.RTForm.test[i].value;
+		            }
+		        }
+		    }
+		    return sAuthCode;
+		}
+		
+		function reformatAuthCodeFromPasteBox(curAuthCode) {
+		    var sAuthCode = "";
+		    var count = 0;
+		    var curposition = 0;
+		    var fillFlag = 0, skipFlag = 0;
+		    var nextvalue = 0;
+		    var i;
+
+		    while (curposition < curAuthCode.length) { 
+		        fillFlag = 0;
+		        skipFlag = 0;
+		        //  newline should be treated as field seperators
+		        if (curAuthCode.charCodeAt(curposition) == 13 ||
+		            curAuthCode.charCodeAt(curposition) == 10 ||
+		            curAuthCode.charCodeAt(curposition) == 9  ||
+		            curAuthCode.charCodeAt(curposition) == 160) {  
+		            if (count == 0) {   //  linefeed after the field seperators is skipped
+		                curposition++;
+		                continue;
+		            } else {
+		                fillFlag = 1;   //  any linefeed between characters are considered as field seperators
+		            }
+		        } else {	
+		            i = curposition + 1;
+		            //  whether next character is field seperator or not
+		            if (i < curAuthCode.length &&
+		               (curAuthCode.charCodeAt(curposition) != 32) &&
+		               (curAuthCode.charCodeAt(i) == 32 ||
+		                curAuthCode.charCodeAt(i) == 13 ||
+		                curAuthCode.charCodeAt(i) == 10 ||
+		                curAuthCode.charCodeAt(i) == 9  ||
+		                curAuthCode.charCodeAt(i) == 160)) {
+		                if (count >= 3) {
+		                    skipFlag = 1;
+		                } else {
+		                    sAuthCode += curAuthCode.charAt(curposition);
+		                    count++;
+		                    curposition++;
+		                    fillFlag = 1;
+		                }
+		            }
+		        }
+		        if (fillFlag != 0) {
+		            for (i = 4; i > count; i--) {
+		                sAuthCode += " ";
+		            }
+		            count = 0;
+		        } else {
+		            sAuthCode += curAuthCode.charAt(curposition);
+		            if (count >= 3) {
+		                count = 0;
+		                i = curposition + 1;
+		                if (curAuthCode.charCodeAt(i) == 32 ||
+		                    curAuthCode.charCodeAt(i) == 13 ||
+		                    curAuthCode.charCodeAt(i) == 10 ||
+		                    curAuthCode.charCodeAt(i) == 9 ||
+		                    curAuthCode.charCodeAt(i) == 160) {
+		                    skipFlag = 1;
+		                }
+		            } else {
+		                count++;
+		            }
+		        }
+		        curposition++;
+		        if (skipFlag == 1) {
+		            curposition++;
+		        }
+		    }
+		    return sAuthCode;
+		}
+		
+		function enableTextFields() {
+		    for (i = 1; i < maxTextFields; i++) {
+		        document.RTForm.test[i].disabled = false;
+		    }
+		}
+
+		function fillInitTextBuffer() {		    
+		        //  Assign value to the text buffer
+		    totalTextFields = 0;
+		    var curLength = 0;
+		    var curString;
+		    while (curLength < sNewString.length) { 
+		        if ((curLength+digitPerField) < sNewString.length) {
+		            curString = sNewString.substr(curLength, digitPerField);
+		            curLength += digitPerField;
+		        } else {
+		            curString = sNewString.substr(curLength);
+		            curLength = sNewString.length;
+		        }
+		        if (curString == "    ") {
+		            fieldValues[totalTextFields] = "";
+		        } else {
+		            for (i = curString.length-1; i >= 0; i--) {
+		                if (curString.charCodeAt(i) != 32) {
+		                    break;
+		                }
+		            }
+		            i++;
+		            if (i != digitPerField) {
+		                fieldValues[totalTextFields] = curString.substr(0, i);
+		            } else {
+		                fieldValues[totalTextFields] = curString;
+		            }
+		        }
+		        totalTextFields++;  
+		        if (totalTextFields >= maxBufferFields) {
+		            break;
+		        }    
+		    }
+		    if (totalTextFields < maxTextFields) {
+		        totalTextFields = maxTextFields;
+		    }
+		}
+		
+		function stripSpaces(curString) {
+		    var newString = "";
+		 
+		    var curposition = 0;
+		    for (curposition = 0; curposition < curString.length; curposition++) {
+		        //  no spaces or new lines
+		        if (curString.charCodeAt(curposition) == 32 ||
+		            curString.charCodeAt(curposition) == 13 ||
+		            curString.charCodeAt(curposition) == 10) {
+		            continue;
+		        }
+		        newString += curString.charAt(curposition);
+		    }
+		    return newString;
+		}
+		
+		function fillTextBuffer(index) {
+		    if (index > maxBufferFields) {
+		        //  initialization so don't strip spaces
+		        index = 0;
+		    } else {
+		        sNewString = stripSpaces(sNewString);
+		    }
+		    var retvalue = 0;
+		        //  Assign value to the text buffer
+		    totalTextFields = index;
+		    var curLength = 0;
+		    while (curLength < sNewString.length) { 
+		        if ((curLength+digitPerField) < sNewString.length) {
+		            fieldValues[totalTextFields] = sNewString.substr(curLength, digitPerField);
+		            curLength += digitPerField;
+		        } else {
+		            fieldValues[totalTextFields] = sNewString.substr(curLength);
+		            curLength = sNewString.length;
+		        }
+		        totalTextFields++;  
+		        if (totalTextFields >= maxBufferFields) {
+		            break;
+		        }    
+		    }
+		    retvalue = totalTextFields;
+		    
+		    if (totalTextFields < maxTextFields) {
+		        totalTextFields = maxTextFields;
+		    }
+
+		    return retvalue;
+		}
+		
+		function onPaste(index) {
+		        //  disable default browser behavior
+		    event.returnValue = false;
+		        //  Get the data from the clipboard
+			if (navigator.appName == "Microsoft Internet Explorer")
+			{
+				sNewString = window.clipboardData.getData('text');
+			}
+			else
+			{
+				sNewString = event.clipboardData.getData('text/plain');
+			}
+
+		    backupAuthcodeFields();
+		    var focusIndex = fillTextBuffer(index);
+
+		    for (i = totalTextFields; i < maxBufferFields; i++) {
+		        if (fieldValues[i] != "") {
+		            totalTextFields = i+1;
+		        }
+		    }
+		    createAuthCodeFields();		
+		    if (totalTextFields == 1) {
+		        document.RTForm.test.focus();
+		    } else {
+		        document.RTForm.test[(focusIndex-1)].focus();
+		    }
+
+		}
+		
+		function onTextAreaPaste() {
+			if((event.keyCode == 86) && (event.ctrlKey || event.metaKey))
+			{
+				sNewString = document.RTForm.testarea.value;
+				sNewString = sNewString.replace(/\s+/,"");
+				sNewString = reformatAuthCodeFromPasteBox(sNewString);
+				initialTextBuffer();
+				fillInitTextBuffer();
+				document.RTForm.testarea.value = getFormattedAuthCodeFromInitBuffers();
+			}
+		}
+		
+		function setFieldFocus() {
+		    var i;
+		    if (totalTextFields == 1) {
+		        document.RTForm.test.focus();
+		    } else {
+    		    for (i = 0; i < totalTextFields; i++) {
+		            if (document.RTForm.test[i].value == "" || document.RTForm.test[i].value.length < fieldsPerRow) {
+		                document.RTForm.test[i].focus();
+		                break;
+		            }
+    		    	}
+		    }
+		}
+		
+		function setKeyUpFocus(index) {
+		    if (focusFlag == true) {
+		        document.RTForm.test[(index+1)].select();
+		        focusFlag = false;
+		    }
+		    if (removeFlag)
+		    {
+			timer = setInterval(function(){
+				if(typeof(document.RTForm.test[(index-1)])!="undefined")
+				{
+					clearInterval(timer);
+					document.RTForm.test[(index-1)].select();
+					removeFlag = false;
+				}
+			}, 100);
+		    }
+		}
+		
+		function onKeyUp(index) {
+		    focusFlag = false;	
+		    
+		    switch (event.keyCode) {
+		        case 8: //  backspace
+				event.keyCode = 46;
+				break;
+		        case 9: //  tab
+		        case 37:    //  left
+		        case 39:    //  right
+		            return;
+		           
+		        case 65:    //  A   ctrl+a <-- select all
+		        case 67:    //  C   ctrl+c <-- copy
+		        case 86:    //  v   ctrl+p <-- paste
+		            if (event.ctrlKey == true) {   
+		                return;
+		            } 
+		            break;
+		            
+		        case 89:    //  Y   ctrl+y <-- redo
+		        case 90:    //  Z   ctrl+z <-- undo
+		            if (event.ctrlKey == true) {
+		                resetTotalTextFields();
+		                return;
+		            } 
+		            break;
+		            
+		        case 88:    //  X   ctrl+x <-- cut
+		        default:
+		            break;
+		    }
+			
+            //  Move cursor to the next field
+		    if ((totalTextFields < maxBufferFields) &&
+		        ((totalTextFields == 1 &&
+		        document.RTForm.test.value.length >= digitPerField) ||
+		        (totalTextFields > 1 &&
+		        document.RTForm.test[index].value.length >= digitPerField))) {
+		        //  create a new field
+		        if (index >= (totalTextFields-1)) {
+		            backupAuthcodeFields();
+		            totalTextFields++;
+		            createAuthCodeFields();
+		        }
+		        document.RTForm.test[(index+1)].select();
+    		    	focusFlag = true;
+		    }
+
+		    if(totalTextFields > maxTextFields && index == (totalTextFields - 1) && document.RTForm.test[index].value == "")
+		    {
+			totalTextFields--;
+		        createAuthCodeFields();
+			removeFlag = true;
+		    }
+		}
+		
+		function initialTextBuffer() {
+		    //  Initialization
+		    for (i = 0; i < maxBufferFields; i++) {
+		        fieldValues[i] = "";
+		    }
+		}
+		
+		function onFieldFocus(index) {
+		    focusFlag = false;
+		    // remove the last empty box
+		    if (document.RTForm.test[totalTextFields - 1].value == "" &&
+		        document.RTForm.test[totalTextFields - 2].value.length < digitPerField ) {
+		        totalTextFields--;
+		        createAuthCodeFields();
+		        focusFlag = true;
+		    }
+		}
+		
+		function onBlur(index) {
+		    //  update current value
+		    fieldValues[index] = document.RTForm.test[index].value;
+		}
+		
+		function onReset() {
+		    initialTextBuffer();
+		    document.RTForm.auth.value = "";
+		    totalTextFields = maxTextFields;
+		    createAuthCodeFields();
+			clearAllAuthCodeFields();
+			document.RTForm.test[0].focus();
+			location.href = "RTPlaceHolder.html?page=RTclearup.html";
+		}
+		
+		function clearAllAuthCodeFields()
+		{
+			for (i = 0; i < totalTextFields; i++) 
+			{
+				document.RTForm.test[i].value="";
+			}
+		}
+
+		function createAuthCodeFields() {
+		    //authCodeLayer.innerHTML  = "";
+
+		    var sFieldHTML = "<tr>";
+		    var sHTML = "<tr><td><p><table class=\"block\" align=left>";
+
+		    for (i = 0, j = 0; i < totalTextFields; i++, j++) {
+		        if (j == fieldsPerRow) {
+		            sFieldHTML += "</tr>";
+		            sHTML += sFieldHTML;
+		            j = 0;
+		            sFieldHTML = "<tr>";
+		        }
+		        sFieldHTML += "<td align=right><b>" + (i + 1) + "</b></td>";
+		        sFieldHTML += "<td align=center><input type=text name=\"test";
+		        if (i > 0)
+		            sFieldHTML += 1;
+		        sFieldHTML += "\" id=test maxlength=" + digitPerField +
+			                  " size=7 onkeyup=\"onKeyUp(" + i + ");setKeyUpFocus(" + i + ");\" onpaste=\"onPaste(" + i +
+			                  ");setFieldFocus();\" onblur=\"onBlur(" + i + ");\" ";
+		        if ((totalTextFields > maxTextFields) &&
+			        i != (totalTextFields - 1)) {
+		            sFieldHTML += " onFocus=\"onFieldFocus(" + i + ");\"";
+		        }
+
+		        sFieldHTML += " value=\"" + fieldValues[i] + "\"></td>";
+
+		    }
+
+		    for (; j < fieldsPerRow; j++) {
+		        sFieldHTML += "<td align=center>&nbsp;</td>";
+		    }
+		    sFieldHTML += "</tr>";
+		    sHTML += sFieldHTML;
+		    sHTML += "</table></p></td></tr>";
+
+		    authCodeLayer.innerHTML = sHTML;
+		    for (i = totalTextFields; i < maxBufferFields; i++) {
+		        fieldValues[i] = "";
+		    }
+
+		    sHTML = "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" class=\"btn_submit\" name=\"butnReset\" value=\"";
+		    sHTML += xmsgReset;
+		    sHTML += "\" onclick=\"onReset();\"></p>";
+		    authButtonLayer.innerHTML = sHTML;
+		}
+
+		function createAuthCodeArea() {			
+			authCodeLayer.innerHTML  = "";
+			var sHTML="";  
+			sHTML += "&nbsp;&nbsp;&nbsp;&nbsp;<textarea name=\"testarea\" id=\"testarea\" cols=\"25\" rows=\"10\" maxlength=\"190\" onkeyup=\"onTextAreaPaste();\"></textarea>";
+            authCodeLayer.innerHTML = sHTML;
+            
+            document.RTForm.testarea.value = sNewString;
+            authButtonLayer.innerHTML = "";
+		}
+				
+		function backupAuthcodeFields() {
+		    if (totalTextFields == 1) {
+		        fieldValues[0] = document.RTForm.test.value;
+		    } else {
+		        for (i = 0; i < totalTextFields; i++) {
+		            fieldValues[i] = document.RTForm.test[i].value;
+		        }
+		    }
+		}
+		
+		function resetTotalTextFields() {
+		    totalTextFields = document.RTForm.test.length;
+		}
+		
+		function selectRadio (curRadio) {
+		    //  don't do anything if this field is disabled
+		    if (document.RTForm.selradio[curRadio].disabled) {
+		        return;
+		    }
+		    
+			for (i=0; i<document.RTForm.selradio.length; i++) {
+				if (i == curRadio) {
+				    //  don't do anything if current radio is already selected
+				    if (curSelRadio == i &&
+				        document.RTForm.selradio[i].checked) {
+				        return;
+				    }
+					document.RTForm.selradio[i].checked = true;
+					if (curRadio == 0) {
+						document.RTForm.auth.value = getFormattedAuthCode();
+			            sNewString = document.RTForm.auth.value;
+						createAuthCodeArea();
+						document.RTForm.testarea.focus();
+					} else {
+						document.RTForm.auth.value = reformatAuthCodeFromPasteBox(document.RTForm.testarea.value);
+						sNewString = document.RTForm.auth.value;
+						initialTextBuffer();
+						fillInitTextBuffer();
+						createAuthCodeFields();
+						document.RTForm.test[0].focus();
+					}
+					curSelRadio = curRadio;
+				} else {
+					document.RTForm.selradio[i].checked = false;
+				}
+			}
+		}
+		
+		function disableGetAuthCodeText() {
+	        if (document.getElementsByName)
+		        x = document.getElementsByName('selAuthText');
+	        else if (document.all)
+		        x = document.all.tags('selAuthText');
+	        else {
+	            //  doesn't support this
+	            return;
+	        }
+	        
+		    x[0].disabled = true;
+		}
+		
+		function changeSelTextStatus(s) {
+	        if (document.getElementsByName)
+		        x = document.getElementsByName('selText');
+	        else if (document.all)
+		        x = document.all.tags('selText');
+	        else {
+	            //  doesn't support this
+	            return;
+	        }
+	        
+		    ss = (s == 0);
+	        for (var i=0;i<x.length;i++)
+	        {
+		        x[i].disabled = ss;
+	        }
+		}
+		
+		function changeSelRadioStatus(s) {
+		    //  true - disable, false - enable
+		    ss = (s == 0);
+		    if (reqtype ==1|| reqtype == 4) {
+			    for (i=0; i<document.RTForm.selradio.length; i++) {
+			        document.RTForm.selradio[i].disabled = ss;
+			    }
+			    
+                changeSelTextStatus(s);		    
+		        if (document.RTForm.selradio[0].checked) {
+		            document.RTForm.testarea.disabled = ss;
+					
+		        } else {
+		            for (i = 0; i < totalTextFields; i++) {
+		                document.RTForm.test[i].disabled = ss;
+		            }
+		            document.RTForm.butnReset.disabled = ss;	
+		        }
+				if(!ss)
+					document.RTForm.test[0].focus();
+		    } else {
+				if(reqtype == 5)
+				{
+					if(!ss)
+						document.RTForm.activatepath.focus();
+				}
+		        document.RTForm.auth.disabled = ss;
+		    }
+		}
+		
+		function selectAuthRadio(curRadio) {
+		    //  don't do anything if this field is disabled
+		    if (document.RTForm.selAuthRadio[curRadio].disabled) {
+		        return;
+		    }
+		    
+			for (i=0; i<document.RTForm.selAuthRadio.length; i++) {
+				if (i == curRadio) {
+				    //  don't do anything if current radio is already selected
+				    if (curSelAuthRadio == i &&
+				        document.RTForm.selAuthRadio[i].checked) {
+				        return;
+				    }
+					document.RTForm.selAuthRadio[i].checked = true;
+					if (curRadio == 0) {
+		                document.onkeydown = closeRegisterToday;
+		                document.getElementById("divContainerActiveCode").style.display="none";
+						document.getElementById("divContainerActiveCode").style.visibility="hidden";
+		                document.getElementById("dynamicDisplay").style.visibility="hidden";
+		                document.getElementById("ereglayer").style.display = "";
+						document.getElementById("ereglayer").style.visibility="";
+		                changeSelRadioStatus(0);
+					} else {
+		                document.onkeydown = "";
+		                document.getElementById("divContainerActiveCode").style.display="";
+						document.getElementById("divContainerActiveCode").style.visibility="";
+		                document.getElementById("dynamicDisplay").style.display="none";
+		                document.getElementById("ereglayer").style.display = "none";
+						document.getElementById("ereglayer").style.visibility="hidden";						
+		                changeSelRadioStatus(1);
+					}
+					curSelAuthRadio = curRadio;
+				} else {
+					document.RTForm.selAuthRadio[i].checked = false;
+				}
+		    }
+		}
+
+		function onHoverConnect(hovertype) {
+		    var selAuthTextControl;
+		    if (document.getElementsByName)
+		        selAuthTextControl = document.getElementsByName('selAuthText');
+		    else if (document.all)
+		        selAuthTextControl = document.all.tags('selAuthText');
+		        
+		    if (hovertype == 0) {
+		        document.getElementById("connectHover").style.display = "none";
+		        selAuthTextControl[0].style.fontWeight = "normal";
+		    } else {
+		        document.getElementById("connectHover").style.display="";
+		        selAuthTextControl[0].style.fontWeight = "bold";
+		    }
+		}
+
+		function onHoverManual(hovertype) {
+		    var selAuthTextControl;
+		    if (document.getElementsByName)
+		        selAuthTextControl = document.getElementsByName('selAuthText');
+		    else if (document.all)
+		        selAuthTextControl = document.all.tags('selAuthText');
+		        
+		    if (hovertype == 0) {
+		        document.getElementById("manualHover").style.display="none";
+		        selAuthTextControl[1].style.fontWeight = "normal";
+		    } else {
+		        document.getElementById("manualHover").style.display="";
+		        selAuthTextControl[1].style.fontWeight = "bold";
+		    }
+		}
+
+		//	Handle "backspace" key and make "backspace" key behave like "Back" button		
+		document.onkeydown = goBackKey;
+
+		function onBack() {
+		
+            if(backtype == 0)
+                 location.href= gotoVirtualPage("RTBack.html"); 
+            else
+                //history.go(-1);
+				location.href="RTProductInfo.html?p=" + escape(userTempPath);
+				
+			}
+		
+			//	Handle "backspace" key and make "backspace" key behave like "Back" button		
+			document.onkeydown = goBackKey;
+			
+			function goBackKey(e) {
+				if (event.srcElement.type != "text" && event.srcElement.type != "textarea" && event.keyCode == 8) {
+					event.keyCode = 0;
+					onBack();
+				}
+			}
+			
+	    function doSubmission() {
+		    if (typeof(document.RTForm.nsernum) != "undefined") {
+		        document.eRegForm.sernum.value = document.RTForm.nsernum.value + "-" + document.RTForm.nsernum1.value; 
+		    }
+		    StartAni();
+			
+			for(i=0; i<document.RTForm.selAuthRadio.length; i++)
+			{
+			     document.RTForm.selAuthRadio[i].disabled = true;
+			}
+
+			
+		    document.eRegForm.submit(); 
+		    document.RTForm.closebutn.disabled = true;
+		    document.RTForm.submitbutn.disabled = true;  
+			
+
+		}
+
+	    function doManualSubmission() {		
+			for(i=0; i<document.RTForm.selAuthRadio.length; i++)
+			{
+			     document.RTForm.selAuthRadio[i].disabled = true;
+			}
+
+            if (typeof(document.RTForm.butnReset) != "undefined") {
+ 		        document.RTForm.butnReset.disabled = true;
+ 		    }
+            document.getElementById("divManualOverlay").style.visibility = "visible";
+            document.getElementById("divManualMessage_parent").style.visibility = "visible";
+ 		    document.getElementById("divManualMessage").style.visibility = "visible";
+            		
+		    document.eRegForm.submit(); 
+		    document.RTForm.backbutn.disabled = true;
+		    document.RTForm.closebutn.disabled = true;
+		    document.RTForm.submitbutn.disabled = true;  
+			
+			setTimeout("doRedirect();", 2000);
+		}
+		
+		function doRedirect() {
+		    location.href="RTAuthConfirmed.html" + "?p=" + escape(userTempPath);
+		}
+		
+		function onNext() {	
+             var oTextbox=document.getElementById("test");//get the input of short Code :test of AuthRadio
+		     var oError=document.getElementById("errorASCode"); // display error msg when in short Code
+           	 var oError1=document.getElementById("errorACode");
+           	 var oTextbox1=document.getElementById("activatepath");   
+           	 var selAuthRadio;   
+
+                    if(typeof(oTextbox1)!="undefined" && oTextbox1 != null)
+                    {
+                        var tmpActivatePath = oTextbox1.value;
+                        tmpActivatePath = tmpActivatePath.replace(/^(\s)+/, "");
+                        tmpActivatePath = tmpActivatePath.replace(/(\s)+$/, "");
+                        oTextbox1.value = tmpActivatePath;
+                    }
+		
+		    if (document.RTForm.selAuthRadio[0].checked) {
+		        //if it's trial serial number, we need to verify it first
+			    if (rtbuymode == "n" && sernum == "000-00000000") {
+			        location.href=gotoVirtualPage("RTVerifySN.html");
+			    } else {
+			       doSubmission();				       
+			    }
+			} else {
+				resetContactInfo();				
+			}
+		}
+			//-->										
+		</script>
+		<script> <!--
+		document.writeln('<META HTTP-EQUIV="content-type" CONTENT="text/html; charset='+rtcodepage+'">');// -->
+		</script>
+		<meta http-equiv="MSThemeCompatible" CONTENT="yes">
+	</head>
+	<body id="nobgrd" onload="setfocus()">
+	<div id="container">
+		<script src="RTHeader.js"></script>
+		<script><!--
+		    UseAutodeskBanner(xmsgRegAuthInfo, resourceBandImage);
+		//-->
+		</script>
+		<script src="RTNavigation.js"></script>
+		<form name="RTForm" onsubmit="return false;">
+		<script><!--
+			document.writeln('<input type="hidden" name="prodlang" value="'+xmsgProductLanguage+'">');
+		    
+		// -->
+			</script>
+			<!--Insert New Serial Number Text -->
+			<script><!--
+			if (rtbuymode == "n" && sernum == "000-00000000") {
+				document.writeln('<p>'+NewSerialBlock);
+				document.writeln();
+				document.writeln('</p>');
+				filler = 0;
+			} // -->
+			</script>
+			<p>
+			<script><!--
+			document.writeln(format(xmsgPleaseSelect2, product));
+			// -->
+			</script>
+			<div id="connectHover" class="hoverarea">
+			<script><!--
+			document.writeln(xmsgRegAuthInfo2Hover);
+            // -->
+			</script>
+			</div>
+			<div id="manualHover" class="hoverarea">
+			<script><!--
+			if (reqtype == "5") {
+			    document.writeln(xmsgRegAuthInfo4AHoverB);
+			} else {
+			    document.writeln(xmsgRegAuthInfo4AHoverA);
+			}
+            // -->
+			</script>
+			</div>
+			<p><input type="radio" value="RTOfflineActivationRequest.html" name="selAuthRadio"  checked onclick="selectAuthRadio(0);" onmouseover="onHoverConnect(1)" onmouseout="onHoverConnect(0)"> 
+				<a name="selAuthText" value=0 onclick="selectAuthRadio(0);" style="color:Black;" onmouseover="onHoverConnect(1)" onmouseout="onHoverConnect(0)">
+					<script><!--
+					document.writeln(xmsgRegAuthInfo2);// -->
+					</script>
+				</a>
+			</p>
+			<p><input type="radio" value="RTAuthNow.html" name="selAuthRadio" onclick="selectAuthRadio(1);" onmouseover="onHoverManual(1)" onmouseout="onHoverManual(0)">
+				<a name="selAuthText" value=1 onclick="selectAuthRadio(1);" style="color:Black;" onmouseover="onHoverManual(1)" onmouseout="onHoverManual(0)"> 
+					<script><!--
+					document.writeln(xmsgRegAuthInfo4A);//  -->					
+					</script>
+				</a>
+			</p>
+			
+			<script language="javascript1.2"><!-- 
+	
+			function onBrowser(){
+				document.RTForm.browsefield.value = "os";
+				document.RTForm.browsefieldindex.value = 1;
+				document.RTForm.page.value = "RTosfindup.html";
+			    document.RTForm.action=gotoVirtualPage("RTosfindup.html");
+				location.href = "RTPlaceHolder.html?page=RTosfindup.html&browsefield=os&browsefieldindex="+"&browsetype=2&selradio=&s";			
+			    
+			    }
+	    	//-->
+		    </script>
+		    <div id="dynamicDisplay">
+		    <script><!--
+		    //document.writeln("<br/>");		  
+		    //-->
+		    </script>
+		    </div>
+			<div id="divContainerActiveCode">
+			<table class="block">
+			<tr><td>
+			<span id="authCodeLayer"></span>
+			</td></tr>
+			<tr><td>
+			<tr><td>
+			<span id="authButtonLayer"></span>
+			</td></tr>
+			<script><!--
+			if (reqtype == "1" || reqtype == "5"|| reqtype =="4") {
+			    document.writeln("<input type=hidden name=\"auth\" />"); 
+			} else {
+                document.writeln("<textarea name=\"auth\" cols=\"64\" rows=\"5\" ID=\"Textarea1\"></textarea>");
+			}
+			// fail to work without this section of codes-->
+			</script></p>
+			</td></tr>
+			</table>
+			<p>
+			<script><!--
+			    if (reqtype == "1" || reqtype == "4") { // C-Dilla or short code
+			        document.writeln('<p><div id="errorASCode" style="width:400px;"></div></p>');
+			        document.writeln("<input type=\"hidden\" name=\"selradio\" value=\"0\">");
+			        //				document.writeln("<a name=\"selText\" value=\"0\" onclick=\"selectRadio(0);\">");
+			        //				document.writeln(xmsgRegAuthInfo12);
+			        //				document.writeln("</a></p>");
+			        document.writeln("<input type=\"hidden\" name=\"selradio\" value=\"1\">");
+			        //				document.writeln("<a name=\"selText\" value=\"1\" onclick=\"selectRadio(1);\">");
+			        //				document.writeln(xmsgRegAuthInfo13);
+			        //				document.writeln("</a></p>");
+			    }
+
+			    if (reqtype == "5") { // long code
+			        document.writeln('<p>');
+			        document.writeln('<input type="hidden" name="page" value="dummy">');
+			        document.writeln('<input type="hidden" name="browsefield" value="dummy" ID="Hidden1">');
+			        document.writeln('<input type="hidden" name="browsefieldindex" value="dummy" ID="Hidden2">');
+			        document.writeln('<input type="hidden" name="browsetype" value="2">');
+			        document.writeln('</p>');
+			        document.writeln('<p><div id="errorACode" style="width:400px;"></div></p>');
+			        document.writeln("<INPUT TYPE=\"text\" size=56,1 NAME=\"activatepath\" id=\"activatepath\">");
+			        document.writeln('<a onclick=\"onBrowser();\"><INPUT TYPE=\"button\" class="btn_submit" value="' + xmsgBrowse + '">');
+			        document.RTForm.activatepath.focus();
+			        document.writeln("</u></a>");
+			        //			    document.writeln("<br></br>");
+			        document.writeln("<br>");
+			        //			    document.writeln(xmsgReqfilelocMsg);   
+			        //			    document.writeln("</br>");
+			        //			    document.writeln(reqfolder);
+			        document.writeln('</p>');
+					document.writeln('<br><br><br><br><br><br><br><br><br><br>');
+			    }
+			// -->
+			</script>
+			</div>
+			<div id="ereglayer">
+			<script><!--
+			document.writeln(xmsgFormWebData2);// -->
+			</script>
+			<br><br><br><br><br><br><br><br><br>
+			</div>
+			</p>
+			<!--Table Footer -->
+			<script><!--
+			StartNavigationButtons();			
+			document.writeln('<script src=\"rtanimdots.js\"></script>');			
+			document.writeln('<input type="button" class="btn_submit" value="'+xmsgBack+'" name=backbutn onclick="onBack();">');
+			document.writeln('<input type="button" class="btn_submit" value="'+xmsgCancel+'" name=closebutn onclick=\'location.href=gotoVirtualPage("RTcancel.html");\'>');
+			document.writeln('<input type="button" class="btn_submit" value="'+xmsgNext+'" name=submitbutn onclick="onNext();">');
+
+	// -->
+			EndNavigationButtons();
+			</script>
+		</form>
+		<script src="RTFooter.js"></script>
+		<script><!--
+			document.writeln('<script src=\"'+userTempPath+'rtthinpackage.js?FromID='+key+'\"></script>');
+		// -->
+		</script>
+	</div>
+	<div class="full_background" id="divManualOverlay"></div>
+	    <div class="transbox_for_fullscreen_parent" id="divManualMessage_parent">
+            <div class="transbox_for_fullscreen" id="divManualMessage">
+		        <script><!--
+                    if (navigator.appName == "Microsoft Internet Explorer") {
+                        document.writeln("<div style=\"text-align:center; margin:50 auto; width:420px;\">");	
+                    } else {
+                        document.writeln("<div style=\"text-align:center; margin:40 55; width:420px;\">");	
+                    }        
+                    document.writeln("<table><tr>");
+                    document.writeln("<td><img src=\"Anim_Activating.gif\" /></td>");
+                    document.writeln("<td><font size=\"2\"><b>" + xmsgConnectHdr2);
+                    document.writeln("&nbsp;</b></font></td>");
+                    document.writeln("</tr></table>");
+                    document.writeln("</div>");
+		            // -->
+		        </script>
+	        </div>
+        </div>
+	</body>
+</html>
+
